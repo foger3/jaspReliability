@@ -21,10 +21,8 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
   jaspResults[["table"]] <- .handleIntraclassCorrelation(dataset, options)
 
-  if(options$descriptivesBlandAltman){
-    .descriptivesBlandAltman(jaspResults, dataset, options)
-    .descriptivesBlandAltmanTable(jaspResults, dataset, options)
-  }
+  .descriptivesBlandAltman(     jaspResults, dataset, options)
+  .descriptivesBlandAltmanTable(jaspResults, dataset, options)
 
   return()
 }
@@ -130,6 +128,9 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
 .descriptivesBlandAltman <- function(jaspResults, dataset, options){
 
+  if(!options$descriptivesBlandAltman)
+    return()
+
   ready <- length(options$pairs) > 0
 
   if (is.null(jaspResults[["plotsBlandAltman"]])) {
@@ -173,25 +174,11 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
   # Bland-Altman Plot
   if(options[["ciDisplay"]]){
-    if(max(ba$CiLines) > max(ba$diffs) && min(ba$CiLines) < min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(ba$CiLines)
-    } else if(max(ba$CiLines) < max(ba$diffs) && min(ba$CiLines) > min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(ba$diffs)
-    } else if(max(ba$CiLines) < max(ba$diffs) && min(ba$CiLines) < min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(ba$CiLines), ba$diffs))
-    } else if(max(ba$CiLines) > max(ba$diffs) && min(ba$CiLines) > min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(ba$diffs), ba$CiLines))
-    }
+    sum <- c(ba$diffs, ba$CiLines)
+    yBreaks <- jaspGraphs::getPrettyAxisBreaks(sum)
   } else {
-    if(max(ba$lines) > max(ba$diffs) && min(ba$lines) < min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(ba$lines)
-    } else if(max(ba$lines) < max(ba$diffs) && min(ba$lines) > min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(ba$diffs)
-    } else if(max(ba$lines) < max(ba$diffs) && min(ba$lines) < min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(ba$lines), ba$diffs))
-    } else if(max(ba$lines) > max(ba$diffs) && min(ba$lines) > min(ba$diffs)){
-      yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(ba$diffs), ba$lines))
-    }
+    sum <- c(ba$diffs, ba$lines)
+    yBreaks <- jaspGraphs::getPrettyAxisBreaks(sum)
   }
 
   yBreaks <- c(floor(min(yBreaks)), yBreaks[!yBreaks%%1], ceiling(max(yBreaks)))
@@ -233,6 +220,9 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 }
 
 .descriptivesBlandAltmanTable <- function(jaspResults, dataset, options){
+
+  if(!options$descriptivesBlandAltman)
+    return()
 
   # Check for errors using JASPs internal convenience function
   .hasErrors(
