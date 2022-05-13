@@ -224,7 +224,7 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
 .descriptivesBlandAltmanTable <- function(jaspResults, dataset, options){
 
-  if(!options[["descriptivesBlandAltman"]])
+  if(!options[["descriptivesBlandAltmanTable"]])
     return()
 
   .hasErrors(
@@ -238,7 +238,7 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
   if (is.null(jaspResults[["tabBlandAltman"]])) {
     jaspResults[["tabBlandAltman"]] <- createJaspContainer(gettext("Bland-Altman Tables"))
-    jaspResults[["tabBlandAltman"]]$dependOn(c("descriptivesBlandAltman", "ciDisplay", "ciValue"))
+    jaspResults[["tabBlandAltman"]]$dependOn(c("descriptivesBlandAltmanTable", "ciDisplay", "ciValue"))
     subcontainer <- jaspResults[["tabBlandAltman"]]
   } else {
     subcontainer <- jaspResults[["tabBlandAltman"]]
