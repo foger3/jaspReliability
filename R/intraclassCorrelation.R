@@ -126,9 +126,9 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
   return(jaspTable)
 }
 
-.descriptivesBlandAltman <- function(jaspResults, dataset, options){
+.descriptivesBlandAltman <- function(jaspResults, dataset, options) {
 
-  if(!options[["descriptivesBlandAltman"]])
+  if (!options[["descriptivesBlandAltman"]])
     return()
 
   ready <- length(options[["pairs"]]) > 0
@@ -141,23 +141,23 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
     subcontainer <- jaspResults[["plotsBlandAltman"]]
   }
 
-  if(ready){
-    for(pair in options[["pairs"]]) {
+  if (ready) {
+    for (pair in options[["pairs"]]) {
       title <- paste(pair, collapse = " - ")
-      if(!is.null(subcontainer[[title]]))
+      if (!is.null(subcontainer[[title]]))
         next
       descriptivesBlandAltman <- createJaspPlot(title = title, width = 600, height = 420)
       descriptivesBlandAltman$dependOn(optionContainsValue = list(pairs = pair))
       subcontainer[[title]] <- descriptivesBlandAltman
 
-      if(pair[[1]] == "" || pair[[2]] == ""){
+      if (pair[[1]] == "" || pair[[2]] == "") {
         descriptivesBlandAltman$setError(gettext("Please provide another variable"))
         next
       }
 
       subData <- data.frame(dataset[, unlist(pair)])
       errorMessage <- .baCheckErrors(subData, c(pair[[1]], pair[[2]]), obsAmount = "< 2")
-      if (!is.null(errorMessage)){
+      if (!is.null(errorMessage)) {
         descriptivesBlandAltman$setError(gettextf("Plotting not possible: %s", errorMessage))
         next
       }
@@ -170,13 +170,13 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
 }
 
-.descriptivesBlandAltmanPlot <- function(dataset, options){
+.descriptivesBlandAltmanPlot <- function(dataset, options) {
 
   ba <- .descriptivesBlandAltmanStats(dataset = dataset, options = options)
   values <- data.frame(m = ba$means, d = ba$diffs)
 
   # Bland-Altman Plot
-  if(options[["ciDisplay"]]){
+  if (options[["ciDisplay"]]) {
     sum <- c(ba$diffs, ba$CiLines)
     yBreaks <- jaspGraphs::getPrettyAxisBreaks(sum)
   } else {
@@ -190,10 +190,10 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
     ggplot2::xlab("Mean of Measurements") +
     ggplot2::ylab("Difference of Measurements")
 
-  if(options[["ciDisplay"]]){
+  if (options[["ciDisplay"]]) {
     p <- p + ggplot2::geom_hline(yintercept = ba$CiLines, linetype = 2, size = 0.5)
 
-    if (options[["ciShading"]]){
+    if (options[["ciShading"]]) {
       p <- p + ggplot2::annotate("rect", xmin = -Inf, xmax = Inf,
                                  ymin = ba$CiLines[3],
                                  ymax = ba$CiLines[4],
@@ -217,9 +217,9 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
     ggplot2::theme(plot.margin = ggplot2::margin(5))
 }
 
-.descriptivesBlandAltmanTable <- function(jaspResults, dataset, options){
+.descriptivesBlandAltmanTable <- function(jaspResults, dataset, options) {
 
-  if(!options[["descriptivesBlandAltmanTable"]])
+  if (!options[["descriptivesBlandAltmanTable"]])
     return()
 
   ready <- length(options[["pairs"]]) > 0
@@ -232,10 +232,10 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
     subcontainer <- jaspResults[["tabBlandAltman"]]
   }
 
-  if(ready){
-    for(pair in options[["pairs"]]) {
+  if (ready) {
+    for (pair in options[["pairs"]]) {
       title <- paste(pair, collapse = " - ")
-      if(!is.null(subcontainer[[title]]))
+      if (!is.null(subcontainer[[title]]))
         next
       tablesBlandAltman <- createJaspTable(title = title)
       tablesBlandAltman$dependOn(optionContainsValue = list(pairs = pair))
@@ -265,7 +265,7 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
         )
       }
 
-      if(pair[[1]] == "" || pair[[2]] == ""){
+      if (pair[[1]] == "" || pair[[2]] == "") {
         tablesBlandAltman$addFootnote(gettext("Please provide another variable"))
         next
       }
@@ -283,7 +283,7 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
       linesData <- data.frame(agree = c(ba$lines[3], ba$lines[2], ba$lines[1]))
       allData <- cbind(allData, linesData)
 
-      if(options[["ciDisplay"]]){
+      if (options[["ciDisplay"]]) {
         lowCiData <- data.frame(lowerBound = c(ba$CiLines[5], ba$CiLines[3], ba$CiLines[1]))
         topCiData <- data.frame(upperBound = c(ba$CiLines[6], ba$CiLines[4], ba$CiLines[2]))
         allData <- cbind(allData, lowCiData, topCiData)
@@ -297,7 +297,7 @@ intraclassCorrelation <- function(jaspResults, dataset, options) {
 
 }
 
-.descriptivesBlandAltmanStats <- function(dataset, options){
+.descriptivesBlandAltmanStats <- function(dataset, options) {
 
   # Calculating main components
   ci <- options[["ciValue"]]
